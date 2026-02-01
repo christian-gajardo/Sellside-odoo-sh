@@ -3,7 +3,7 @@ from odoo.http import request
 
 class AiCartController(http.Controller):
 
-    @http.route('/shop/cart/update_json_ai', type='json', auth="public", methods=['POST'], website=True)
+    @http.route('/shop/cart/update_json_ai', type='jsonrpc', auth="public", methods=['POST'], website=True)
     def add_to_cart_ai(self, product_ids, **kw):
         """
         Recibe una lista de IDs de productos (product.product) y los añade al carrito.
