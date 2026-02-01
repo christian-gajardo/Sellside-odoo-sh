@@ -1,6 +1,6 @@
 {
     'name': 'AI Chat to Cart Integration',
-    'version': '0-1',
+    'version': '0.1',
     'category': 'Website',
     'depends': [
         'website_sale',
