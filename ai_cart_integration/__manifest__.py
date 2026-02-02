@@ -11,7 +11,7 @@
         'ai_app',
     ],
     'data': [
-        'data/ai_tool_data.xml'
+        #'data/ai_tool_data.xml'
     ],
     'installable': True,
     'application': True,
