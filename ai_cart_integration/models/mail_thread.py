@@ -1,45 +1,56 @@
-from odoo import models, api
+from odoo import models, api, _
 
 class MailThread(models.AbstractModel):
     _inherit = 'mail.thread'
-    
+
     @api.model
     def ai_action_add_to_cart(self, product_ids):
-        # 1. Obtenemos el sitio web
-        website = self.env['website'].get_current_website()
+        """ Puerta de enlace para la IA """
+        if not product_ids:
+            return _("No se indicaron productos.")
+
+        # 1. Obtener o crear el carrito usando el sub-método
+        sale_order = self._ai_get_or_create_cart()
         
-        # Intentamos obtener el partner del chat para que el carrito sea el del usuario
-        # Si no lo encontramos, usamos el del usuario actual (env.user)
+        # 2. Procesar los productos usando el sub-método
+        added_names = self._ai_process_cart_items(sale_order, product_ids)
+        
+        if added_names:
+            self.env.cr.commit()
+            return _("Añadido: %s") % (", ".join(added_names))
+        return _("No pude añadir los productos al carrito.")
+
+    def _ai_get_or_create_cart(self):
+        """ Busca el carrito actual del usuario o crea uno nuevo """
+        website = self.env['website'].get_current_website()
         partner = self.env.user.partner_id
         
-        # Buscamos un carrito existente para este partner en este sitio web
-        sale_order = self.env['sale.order'].sudo().search([
+        order = self.env['sale.order'].sudo().search([
             ('partner_id', '=', partner.id),
             ('website_id', '=', website.id),
             ('state', '=', 'draft')
         ], limit=1, order='date_order desc')
 
-        if not sale_order:
-            sale_order = self.env['sale.order'].sudo().create({
+        if not order:
+            order = self.env['sale.order'].sudo().create({
                 'partner_id': partner.id,
                 'website_id': website.id,
+                'company_id': website.company_id.id,
             })
+        return order
+
+    def _ai_process_cart_items(self, sale_order, product_ids):
+        """ Itera y añade los productos al pedido """
+
+        ids = [product_ids] if isinstance(product_ids, (int, str)) else product_ids
+        success_names = []
         
-        summary = []
-        for p_id in product_ids:
+        for p_id in ids:
             try:
                 product = self.env['product.product'].sudo().browse(int(p_id))
                 if product.exists():
-                    # Usamos sudo() para asegurar que la IA tenga permisos de escritura
-                    sale_order.sudo()._cart_update(product_id=product.id, add_qty=1)
-                    summary.append(product.name)
+                    sale_order._cart_update(product_id=product.id, add_qty=1)
+                    success_names.append(product.name)
             except Exception:
                 continue
-        
-        # MUY IMPORTANTE: Commit para forzar que el navegador vea el cambio
-        self.env.cr.commit()
-        
-        if not summary:
-            return "No se pudieron añadir los productos."
-            
-        return f"¡Hecho! He añadido {', '.join(summary)} a tu carrito. Por favor, refresca la página para verlo."
+        return success_names
