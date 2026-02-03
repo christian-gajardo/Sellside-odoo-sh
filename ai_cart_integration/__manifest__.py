@@ -4,14 +4,13 @@
     'summary': 'Permite al agente de IA añadir productos al carrito directamente desde el chat.',
     'author': 'IA-Sellside-ChG',
     'depends': [
-        'website_sale',
+        'website',
         'im_livechat',
-        'sale',
+        'stock',
         'ai',
         'ai_app',
     ],
     'data': [
-        #'data/ai_tool_data.xml'
     ],
     'installable': True,
     'application': True,
