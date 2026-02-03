@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ai_cart_integration_ai_cart_integration,ai_cart_integration.ai_cart_integration,model_ai_cart_integration_ai_cart_integration,base.group_user,1,1,1,1
