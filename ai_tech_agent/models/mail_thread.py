@@ -21,8 +21,6 @@ class MailThread(models.AbstractModel):
         if not added_products:
             return _("No se pudieron añadir los productos al carrito.")
 
-        self._ai_update_crm_lead(sale_order, added_products)
-
         self.env.cr.commit()
         return _("¡Hecho! He añadido %s a tu carrito. Por favor, refresca la página para verlo.") % (', '.join(added_products))
 
@@ -69,35 +67,3 @@ class MailThread(models.AbstractModel):
             except Exception:
                 continue
         return summary
-    
-    def _ai_update_crm_lead(self, sale_order, product_names):
-        """
-        Sincroniza la actividad del carrito con el CRM.
-        Si existe una oportunidad abierta para el cliente, actualiza su descripción.
-        De lo contrario, crea una nueva iniciativa con prioridad basada en el monto del pedido.
-
-        :param sale_order: Registro del pedido de venta (carrito).
-        :param product_names: Lista de nombres de los productos añadidos.
-        """
-        crm_lead_obj = self.env['crm.lead'].sudo()
-
-        existing_lead = crm_lead_obj.search([
-            ('partner_id', '=', sale_order.partner_id.id),
-            ('type', '=', 'opportunity'),
-            ('probability', '<', 100)
-        ], limit=1)
-
-        description = _("Productos en carrito: %s") % (', '.join(product_names))
-
-        if existing_lead:
-            existing_lead.description = (existing_lead.description or '') + "\n" + description
-        else:
-            crm_lead_obj.create({
-                'name': _("Interés en Hardware: %s") % sale_order.partner_id.name,
-                'partner_id': sale_order.partner_id.id,
-                'user_id': self.env.user.id,
-                'team_id': self.env['crm.team'].search([], limit=1).id,
-                'description': description,
-                'planned_revenue': sale_order.amount_total,
-                'priority': '2' if sale_order.amount_total > 1000 else '1',
-            })

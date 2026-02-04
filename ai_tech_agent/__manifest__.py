@@ -5,7 +5,6 @@
     'author': 'IA-Sellside-ChG',
     'depends': [
         'website_sale',
-        'crm',
         'im_livechat',
         'stock',
         'ai',
