@@ -3,16 +3,14 @@ import { Message } from "@mail/core/common/message";
 import { patch } from "@web/core/utils/patch";
 import { A2UIGraph } from "../components/a2ui_graph/a2ui_graph"; // <--- IMPORTANTE: Verifica esta ruta
 
-patch(Message.prototype, {
-    setup() {
-        // En OWL, los subcomponentes se declaran en el objeto this.components
-        this.components = {
-            ...this.components,
-            A2UIGraph
-        };
-        return super.setup(...arguments);
+patch(Message, {
+    components: {
+        ...Message.components,
+        A2UIGraph
     },
+});
 
+patch(Message.prototype, {
     get isA2UI() {
         // Accedemos a props.message porque estamos en el componente Message
         const body = this.props.message.body || "";
