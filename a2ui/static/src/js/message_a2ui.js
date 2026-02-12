@@ -1,17 +1,20 @@
 /** @odoo-module **/
 import { Message } from "@mail/core/common/message";
 import { patch } from "@web/core/utils/patch";
-import { A2UIGraph } from "../components/a2ui_graph/a2ui_graph"; // Importación de tu clase
+import { A2UIGraph } from "../components/a2ui_graph/a2ui_graph"; // <--- IMPORTANTE: Verifica esta ruta
 
 patch(Message.prototype, {
-    // Registramos A2UIGraph como subcomponente de Message
     setup() {
-        super.setup();
-        // Esto permite que el XML reconozca la etiqueta <A2UIGraph />
-        this.components = { ...this.components, A2UIGraph };
+        // En OWL, los subcomponentes se declaran en el objeto this.components
+        this.components = {
+            ...this.components,
+            A2UIGraph
+        };
+        return super.setup(...arguments);
     },
 
     get isA2UI() {
+        // Accedemos a props.message porque estamos en el componente Message
         const body = this.props.message.body || "";
         return body.includes('type": "a2ui_render"');
     },
