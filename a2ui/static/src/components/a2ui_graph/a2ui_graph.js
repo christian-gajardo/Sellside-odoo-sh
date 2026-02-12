@@ -15,7 +15,7 @@ export class A2UIGraph extends Component {
     renderChart() {
         const ctx = this.canvasRef.el.getContext('2d');
         // Usamos la librería Chart global de Odoo
-        new Chart(ctx, {
+        new window.Chart(ctx, {
             type: this.props.data.type || 'bar',
             data: {
                 labels: this.props.data.labels,
