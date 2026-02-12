@@ -4,10 +4,10 @@
         <xpath expr="//div[contains(@class, 'o-mail-Message-textContent')]" position="replace">
             <div class="o-mail-Message-textContent">
                 <t t-if="isA2UI">
-                    <A2UIGraph data="a2uiData.data" summary="a2uiData.summary"/>
+                    <t t-component="'A2UIGraph'" data="a2uiData.data" summary="a2uiData.summary"/>
                 </t>
                 <t t-else="">
-                    <t t-out="message.body"/>
+                    <t t-out="props.message.body"/>
                 </t>
             </div>
         </xpath>

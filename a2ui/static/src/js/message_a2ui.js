@@ -1,19 +1,21 @@
 /** @odoo-module **/
-import { Message } from "@mail/components/message/message";
+import { Message } from "@mail/core/common/message"; // Esta es la ruta correcta en Odoo 19
 import { patch } from "@web/core/utils/patch";
 
 patch(Message.prototype, {
-    // Definimos un getter para detectar si el mensaje es A2UI
+    // En Odoo 19, accedemos a través de props
     get isA2UI() {
-        return this.message.body && this.message.body.includes('type": "a2ui_render"');
+        const body = this.props.message.body || "";
+        return body.includes('type": "a2ui_render"');
     },
 
-    // Limpiamos el JSON del cuerpo para obtener los datos puros
     get a2uiData() {
         try {
-            const rawBody = this.message.body.replace(/<[^>]*>/g, ''); // Quitamos tags HTML de Odoo
+            // Eliminamos etiquetas HTML (Odoo envuelve el texto en <p>)
+            const rawBody = this.props.message.body.replace(/<[^>]*>/g, '');
             return JSON.parse(rawBody);
         } catch (e) {
+            console.error("A2UI: Error parseando el JSON del mensaje", e);
             return null;
         }
     }
