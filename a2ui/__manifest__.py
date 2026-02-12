@@ -16,6 +16,8 @@
     'assets': {
         'web.assets_backend': [
             'a2ui/static/src/components/**/*',
+            'a2ui/static/src/js/**/*',
+            'a2ui/static/src/xml/**/*',
         ],
     },
     'installable': True,
