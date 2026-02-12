@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_a2ui_source_tree" model="ir.ui.view">
+        <field name="name">a2ui.source.tree</field>
+        <field name="model">a2ui.source</field>
+        <field name="arch" type="xml">
+            <list string="Fuentes Web">
+                <field name="name"/>
+                <field name="url"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_a2ui_source_form" model="ir.ui.view">
+        <field name="name">a2ui.source.form</field>
+        <field name="model">a2ui.source</field>
+        <field name="arch" type="xml">
+            <form string="Fuente Web">
+                <sheet>
+                    <group>
+                        <field name="name" placeholder="Ej: Indicadores Financieros"/>
+                        <field name="url" placeholder="https://ejemplo.com"/>
+                        <field name="selector" placeholder="Ej: .table-data o #content"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_a2ui_source" model="ir.actions.act_window">
+        <field name="name">Fuentes A2UI</field>
+        <field name="res_model">a2ui.source</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_a2ui_root" name="A2UI Agent" sequence="10"/>
+    <menuitem id="menu_a2ui_sources" name="Fuentes Web" parent="menu_a2ui_root" action="action_a2ui_source" sequence="10"/>
+</odoo>

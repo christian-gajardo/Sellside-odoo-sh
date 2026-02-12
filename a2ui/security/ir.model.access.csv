@@ -1,2 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_a2ui_a2ui,a2ui.a2ui,model_a2ui_a2ui,base.group_user,1,1,1,1
+access_a2ui_source,a2ui.source,model_a2ui_source,base.group_user,1,1,1,1
+access_a2ui_service,a2ui.service,model_a2ui_service,base.group_user,1,1,1,1
