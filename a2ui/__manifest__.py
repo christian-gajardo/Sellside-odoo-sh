@@ -13,6 +13,11 @@
         'security/ir.model.access.csv',
         'views/a2ui_source_views.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'a2ui/static/src/components/**/*',
+        ],
+    },
     'installable': True,
     'application': True,
     'license': 'OEEL-1',
